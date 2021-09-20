@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from tqdm import tqdm
 
 import torch
 import torch.nn as nn
@@ -112,25 +113,6 @@ for p_idx,(param_name,param) in enumerate(C.named_parameters()):
         print ("    val:%s"%(param_numpy.reshape(-1)[:5]))
 print ("Total number of parameters:[%s]."%(format(n_param,',d')))
 
-'''
-[0] name:[net.conv2d_00.weight] shape:[(32, 1, 3, 3)].
-    val:[ 0.031  0.008  0.049 -0.253 -0.308]
-[1] name:[net.conv2d_00.bias] shape:[(32,)].
-    val:[0. 0. 0. 0. 0.]
-[2] name:[net.conv2d_04.weight] shape:[(64, 32, 3, 3)].
-    val:[ 0.153 -0.127  0.115  0.051  0.138]
-[3] name:[net.conv2d_04.bias] shape:[(64,)].
-    val:[0. 0. 0. 0. 0.]
-[4] name:[net.linear_09.weight] shape:[(32, 3136)].
-    val:[-0.007 -0.003  0.033 -0.014 -0.024]
-[5] name:[net.linear_09.bias] shape:[(32,)].
-    val:[0. 0. 0. 0. 0.]
-[6] name:[net.linear_11.weight] shape:[(10, 32)].
-    val:[-0.23  -0.164  0.131  0.107  0.257]
-[7] name:[net.linear_11.bias] shape:[(10,)].
-    val:[0. 0. 0. 0. 0.]
-Total number of parameters:[119,530].
-'''
 
 # Simple Forward Path of the CNN Model
 np.set_printoptions(precision=3)
@@ -139,10 +121,10 @@ x_numpy = np.random.rand(2,1,28,28) # batch_size = 2, gray scale image, 28*28
 x_torch = torch.from_numpy(x_numpy).float().to(device)
 y_torch = C.forward(x_torch) # forward path
 y_numpy = y_torch.detach().cpu().numpy() # torch tensor to numpy array
-print ("x_torch:\n",x_torch)
-print ("y_torch:\n",y_torch)
-print ("\nx_numpy %s:\n"%(x_numpy.shape,),x_numpy)
-print ("y_numpy %s:\n"%(y_numpy.shape,),y_numpy)
+# print ("x_torch:\n",x_torch)
+# print ("y_torch:\n",y_torch)
+# print ("\nx_numpy %s:\n"%(x_numpy.shape,),x_numpy)
+# print ("y_numpy %s:\n"%(y_numpy.shape,),y_numpy)
 
 # Evaluation Function
 def func_eval(model,data_iter,device):
@@ -174,7 +156,7 @@ C.train() # to train mode
 EPOCHS,print_every = 10,1
 for epoch in range(EPOCHS):
     loss_val_sum = 0
-    for batch_in,batch_out in train_iter:
+    for batch_in,batch_out in tqdm(train_iter, leave=True):
         # Forward path
         y_pred = C.forward(batch_in.view(-1,1,28,28).to(device))
         loss_out = loss(y_pred,batch_out.to(device))
@@ -207,4 +189,3 @@ for idx in range(n_sample):
     plt.axis('off')
     plt.title("Pred:%d, Label:%d"%(y_pred[idx],test_y[idx]))
 plt.show()
-print ("Done")
