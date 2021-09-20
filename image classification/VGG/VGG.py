@@ -14,6 +14,9 @@ import os
 import numpy as np
 import pandas as pd
 import random
+import wandb
+
+wandb.init(project="my-test-project", entity='teamlab')
 
 # fix random seeds
 random.seed(100)
