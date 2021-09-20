@@ -17,8 +17,8 @@ print(device)
 # DATASET
 mnist_train = datasets.MNIST(root = './data/', train=True, transform=transforms.ToTensor(), download=True)
 mnist_test = datasets.MNIST(root='./data/',train=False,transform=transforms.ToTensor(),download=True)
-print ("mnist_train:\n",mnist_train,"\n")
-print ("mnist_test:\n",mnist_test,"\n")
+# print ("mnist_train:\n",mnist_train,"\n")
+# print ("mnist_test:\n",mnist_test,"\n")
 
 BATCH_SIZE = 256
 train_iter = torch.utils.data.DataLoader(mnist_train, batch_size = BATCH_SIZE, shuffle = True, num_workers = 0)
@@ -40,6 +40,7 @@ class CNN(nn.Module):
 
         self.layers = [] # layer 리스트
         prev_cdim = self.xdim[0] # channel dimension (흑백)
+        # 1>32 32>64
         for cdim in self.cdims:
             self.layers.append(
                 # nput spacial dimension이 output과 똑같게 하기 위해
@@ -57,9 +58,9 @@ class CNN(nn.Module):
                 self.layers.append(nn.BatchNorm2d(cdim))
             # activation
             self.layers.append(nn.ReLU(True))
-            #max-pooling
+            # max-pooling
             self.layers.append(nn.MaxPool2d(kernel_size=(2,2), stride=(2,2)))
-            #Dropout
+            # Dropout
             self.layers.append(nn.Dropout2d(p=0.5))
             prev_cdim = cdim
 
@@ -82,7 +83,7 @@ class CNN(nn.Module):
         self.init_param() # initialize parameter
     def init_param(self):
         for m in self.modules():
-            if isinstance(m,nn.Conv2d):
+            if isinstance(m, nn.Conv2d):
                 nn.init.kaiming_normal_(m.weight) # He initialization(Resnet 기반)
                 nn.init.zeros_(m.bias)
             elif isinstance(m, nn.BatchNorm2d):  # init BN
@@ -134,7 +135,7 @@ Total number of parameters:[119,530].
 # Simple Forward Path of the CNN Model
 np.set_printoptions(precision=3)
 torch.set_printoptions(precision=3)
-x_numpy = np.random.rand(2,1,28,28) # batch 가 2개, gray scale image, 28*28
+x_numpy = np.random.rand(2,1,28,28) # batch_size = 2, gray scale image, 28*28
 x_torch = torch.from_numpy(x_numpy).float().to(device)
 y_torch = C.forward(x_torch) # forward path
 y_numpy = y_torch.detach().cpu().numpy() # torch tensor to numpy array
