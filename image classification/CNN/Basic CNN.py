@@ -99,6 +99,11 @@ class CNN(nn.Module):
 C = CNN(
     name='cnn',xdim=[1,28,28],ksize=3,cdims=[32,64], # 32*32 ->14*14->7*7
     hdims=[32],ydim=10).to(device)
+
+for name, module in C.named_modules():
+    print(f"[ Name ] : {name}\n[ Module ]\n{module}")
+    print("-" * 30)
+
 loss = nn.CrossEntropyLoss()
 optm = optim.Adam(C.parameters(),lr=1e-3)
 

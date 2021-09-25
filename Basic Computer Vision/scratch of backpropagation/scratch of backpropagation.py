@@ -39,7 +39,7 @@ data_transforms = {
 }
 
 ## load the correspoding folders
-image_datasets = {x: datasets.ImageFolder(os.path.join(data_dir, x),
+image_datasets = {x: datasets.ImageFolder(os.path.abspath(os.path.join(data_dir, x)),
                                           data_transforms[x])
                   for x in ['train', 'val']}
 
@@ -116,6 +116,7 @@ dim = x_flatten.shape[0]
 ## model instance
 model = LR(dim)
 model.to(device)
+
 yhat = model.forward(x_flatten.to(device))
 yhat = yhat.data.cpu()
 
