@@ -31,14 +31,14 @@ class LR(nn.Module):
 
 ```
 ### Loss Function
-![img.png](image/img.png)
+![img.png](../image/img.png)
 ```python
 def loss(yhat, y):
     m = y.size()[1]
     return -(1/m)*torch.sum(y*torch.log(yhat)) + (1-y) * torch.log(1-yhat)
 ```
 ### Backward
-![img_3.png](image/img_3.png)
+![img_3.png](../image/img_3.png)
 ```python
     def backward(self, x, yhat, y):
         ## compute backward
@@ -48,7 +48,7 @@ def loss(yhat, y):
 ```
 
 ### Optimizer
-![img_2.png](image/img_2.png)
+![img_2.png](../image/img_2.png)
 ```python
     def optimize(self):
         ## optimization step
@@ -57,4 +57,4 @@ def loss(yhat, y):
 ```
 
 # 학습 결과
-![img_4.png](image/img_4.png)
+![img_4.png](../image/img_4.png)
